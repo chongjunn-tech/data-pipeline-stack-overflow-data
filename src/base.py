@@ -1,7 +1,26 @@
 from abc import ABC, abstractmethod
+from typing import Tuple
 from pathlib import Path
 
 class BasePipeline(ABC):
+    """
+    BasePipeline Class that should be inherited by all implemented pipeline (implemented with different python libraries)
+    It contains attributes and methods that are shared among all pipeline and define abstract methods
+
+    Attributes:
+        input_folder (str): folder name for input_folder
+        posts_filename (str): relative path to posts.csv
+        users_filename (str): relative path to users.csv
+        summary_table_filename (str): relative path to "summary_table.json"
+        tag_analysis_filename (str):relative path to "tag_analysis.parquet"
+
+
+    Args:
+        input_folder (str): folder name for input_folder
+        output_folder (str): folder name for output_folder
+    
+    
+    """    
     def __init__(self, input_folder: str, output_folder: str) -> None:
         self.input_folder = input_folder
         self.posts_filename = Path(input_folder)/"posts.csv"
@@ -10,11 +29,28 @@ class BasePipeline(ABC):
         self.tag_analysis_filename) = self._create_output_folder_structure(input_folder,output_folder)
 
     
-    def _create_output_folder_structure(self, input_folder: str, output_folder: str):
-        output_folder_month = Path(output_folder)/Path(input_folder).name
-        Path(output_folder_month).mkdir(exist_ok=True, parents = True)
-        summary_table_filename = output_folder_month / "summary_table.json"
-        tag_analysis_filename = output_folder_month/ "tag_analysis.parquet"
+    def _create_output_folder_structure(
+        self, 
+        input_folder: str, 
+        output_folder: str
+        )-> Tuple [ str, str]:        
+        """
+        Helper function to create summary_table_filename and tag_analysis_filename
+
+        Args:
+            input_folder (str): folder name for input_folder
+            output_folder (str): folder name for output_folder
+
+        Returns:
+            Tuple[str, str]: summary_table_filename, tag_analysis_filename
+        """        
+        year , month = Path(input_folder).parts[-2:]
+        output_folder = Path(output_folder)/ year/ month
+        Path(output_folder).mkdir(exist_ok=True, parents = True)
+
+        summary_table_filename = output_folder / "summary_table.json"
+        tag_analysis_filename = output_folder/ "tag_analysis.parquet"
+        
         return summary_table_filename, tag_analysis_filename
 
     @abstractmethod
