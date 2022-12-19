@@ -13,12 +13,6 @@ from src.base import BasePipeline
 ################
 
 
-###########
-#Functions#
-###########
-def np_encoder(object):
-    if isinstance(object, np.generic):
-        return object.item()
 
 ##########
 # Classes#
@@ -27,11 +21,6 @@ class PandasPipeline(BasePipeline):
     
     def __init__(self, input_folder: str, output_folder: str) -> None:
         super().__init__(input_folder, output_folder)
-
-    def _dict_to_json_file(self, dictionary: Dict [str, Any], out_filename: str):
-        json_object = json.dumps(dictionary, default=np_encoder)
-        with open(out_filename, "w") as out_file:
-            out_file.write(json_object)
 
     def _get_one_tag_hero(self, values):
         """ Get one tag hero only when series.mode return a list of values (same mode)
@@ -65,7 +54,7 @@ class PandasPipeline(BasePipeline):
 
 
 
-    def compute_summary(self, df_posts, df_users):
+    def compute_summary(self, df_posts: pd.DataFrame, df_users: pd.DataFrame):
         """
         Computes the summary table for a given month.
         
@@ -119,7 +108,7 @@ class PandasPipeline(BasePipeline):
         'histogram': histogram
         }
 
-    def compute_tag_analysis(self, df_posts, df_users):
+    def compute_tag_analysis(self, df_posts: pd.DataFrame, df_users: pd.DataFrame):
         """
         Computes the tag analysis table for a given month.
         
@@ -189,7 +178,7 @@ class PandasPipeline(BasePipeline):
 
         ### Summary table
         summary_table = self.compute_summary(df_posts, df_users)
-        self._dict_to_json_file(summary_table,self.summary_table_filename)
+        PandasPipeline.dict_to_json_file(summary_table,self.summary_table_filename)
         logging.info(f"Summary table (JSON file) for {self.input_folder} created : {self.summary_table_filename}")
 
         ### tag analysis table

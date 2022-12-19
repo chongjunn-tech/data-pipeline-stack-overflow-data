@@ -1,7 +1,20 @@
 from abc import ABC, abstractmethod
-from typing import Tuple
+from typing import Tuple, Dict, Any
+import json
+import numpy as np
 from pathlib import Path
 
+###########
+#Functions#
+###########
+
+def np_encoder(object):
+    if isinstance(object, np.generic):
+        return object.item()
+
+##########
+# Classes#
+##########
 class BasePipeline(ABC):
     """
     BasePipeline Class that should be inherited by all implemented pipeline (implemented with different python libraries)
@@ -52,6 +65,19 @@ class BasePipeline(ABC):
         tag_analysis_filename = output_folder/ "tag_analysis.parquet"
         
         return summary_table_filename, tag_analysis_filename
+    
+    @staticmethod
+    def dict_to_json_file(dictionary: Dict [str, Any], out_filename: str):
+        """
+        Generate json file from a dictionary 
+
+        Args:
+            dictionary (Dict[str, Any]): 
+            out_filename (str): filename of json file
+        """    
+        json_object = json.dumps(dictionary, default=np_encoder)
+        with open(out_filename, "w") as out_file:
+            out_file.write(json_object)
 
     @abstractmethod
     def _preprocess_data(self):
