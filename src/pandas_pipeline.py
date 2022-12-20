@@ -49,8 +49,7 @@ class PandasPipeline(BasePipeline):
         ## only for table for Jan 2016 as it contains all users created until that point
         ## while after that each months, contains only new users created in that month
         if self.data_year == "2016" and self.data_month == "1":
-            latest_year = df_users["creation_date"].dt.year.max()
-            selector = df_users["creation_date"].dt.year == latest_year
+            selector = df_users["creation_date"].dt.year == ["2016"]
             df_users = df_users.loc[selector]
 
         return df_posts, df_users
@@ -122,7 +121,7 @@ class PandasPipeline(BasePipeline):
 
         Parameters:
             - df_posts: Pandas dataframe containing the posts data for the month.
-            - df_users: Pandas dataframe containing the users data for all months.
+            - df_users: Pandas dataframe containing the users data for the month.
 
         Returns:
             A Pandas dataframe with the following columns:
@@ -140,9 +139,14 @@ class PandasPipeline(BasePipeline):
         # - score: Score of the post.
         df = df_posts[["tags", "owner_user_id", "score"]]
 
-        # Extract the month and year from the creation_date column.
-        df.loc[:, "month"] = df_posts["creation_date"].dt.month
-        df.loc[:, "year"] = df_posts["creation_date"].dt.year
+        # Extract the month and year from the creation_date column
+        # and assign to df
+        df_posts_creation_date = df_posts.loc[:,"creation_date"]
+        df_posts_creation_year =  df_posts_creation_date.dt.year
+        df_posts_creation_month = df_posts_creation_date.dt.month
+        df = df.assign(year = df_posts_creation_year)
+        df = df.assign(month = df_posts_creation_month)
+        
 
         # Split the tags field into a list of tags.
         df = df.assign(tags=lambda x: x.tags.str.split("|"))
