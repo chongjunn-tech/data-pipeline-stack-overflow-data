@@ -7,19 +7,15 @@ from src.pipeline_factory import PipelineFactory
 # Configurations#
 ################
 
-# DATA_YEAR_FOLDER = "./inputs"
-# OUTPUT_FOLDER = "./outputs"
-# LOGGING_INFO = "INFO"
-# PIPELINE_CHOICE = "pyspark"
-
-INPUT_FOLDER = os.environ.get("INPUT_FOLDER")
-OUTPUT_FOLDER = os.environ.get("OUTPUT_FOLDER")
-LOGGING_INFO = os.environ.get("LOGGING_INFO")
-PIPELINE_CHOICE = os.environ.get("PIPELINE_CHOICE")
+INPUT_FOLDER = "./inputs"
+OUTPUT_FOLDER = "./outputs"
+LOGGING_INFO = "INFO"
+PIPELINE_CHOICE = "pyspark"
 
 
-if __name__ == "__main__":
 
+
+def run_pipeline():
     logger = logging.getLogger('automated_pipeline')
     logger.setLevel(LOGGING_INFO)
 
@@ -30,3 +26,9 @@ if __name__ == "__main__":
             path_in_str = str(path)
             pipeline = PipelineFactory(PIPELINE_CHOICE,path_in_str,OUTPUT_FOLDER)
             pipeline.generate()
+
+
+if __name__ == "__main__":
+    run_pipeline()
+
+
