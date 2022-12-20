@@ -70,8 +70,10 @@ class BasePipeline(ABC):
         output_folder = Path(output_folder)/ year/ month
         Path(output_folder).mkdir(exist_ok=True, parents = True)
 
-        summary_table_filename = str(output_folder / "summary_table.json")
-        tag_analysis_filename = str(output_folder/ "tag_analysis.parquet")
+        class_name = self.__class__.__name__
+
+        summary_table_filename = str(output_folder / f"{class_name}_summary_table.json")
+        tag_analysis_filename = str(output_folder/ f"{class_name}_tag_analysis.parquet")
         
         return summary_table_filename, tag_analysis_filename
     
