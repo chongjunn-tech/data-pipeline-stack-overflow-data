@@ -36,33 +36,42 @@ class BasePipeline(ABC):
     """    
     def __init__(self, input_folder: str, output_folder: str) -> None:
         self.input_folder = input_folder
-        self.posts_filename = Path(input_folder)/"posts.csv"
-        self.users_filename = Path(input_folder)/"users.csv"
+        self.posts_filename = str(Path(input_folder)/"posts.csv")
+        self.users_filename = str(Path(input_folder)/"users.csv")
+        self.data_year, self.data_month = self._get_year_and_month_from_input_folder(input_folder)
+
         (self.summary_table_filename, 
-        self.tag_analysis_filename) = self._create_output_folder_structure(input_folder,output_folder)
+        self.tag_analysis_filename) = self._create_output_folder_structure(self.data_year, self.data_month, output_folder)
 
     
+    def _get_year_and_month_from_input_folder(
+        self,
+        input_folder: str):
+        year , month = Path(input_folder).parts[-2:]
+        return year, month
+
     def _create_output_folder_structure(
         self, 
-        input_folder: str, 
+        year: str,
+        month: str ,
         output_folder: str
         )-> Tuple [ str, str]:        
         """
         Helper function to create summary_table_filename and tag_analysis_filename
 
         Args:
-            input_folder (str): folder name for input_folder
+            year (str): year number of the stackoverflow data
+            month (str): month number of the stackoverflow data
             output_folder (str): folder name for output_folder
 
         Returns:
             Tuple[str, str]: summary_table_filename, tag_analysis_filename
         """        
-        year , month = Path(input_folder).parts[-2:]
         output_folder = Path(output_folder)/ year/ month
         Path(output_folder).mkdir(exist_ok=True, parents = True)
 
-        summary_table_filename = output_folder / "summary_table.json"
-        tag_analysis_filename = output_folder/ "tag_analysis.parquet"
+        summary_table_filename = str(output_folder / "summary_table.json")
+        tag_analysis_filename = str(output_folder/ "tag_analysis.parquet")
         
         return summary_table_filename, tag_analysis_filename
     
