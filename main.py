@@ -1,34 +1,49 @@
 from pathlib import Path
 import logging
-import os
+import yaml
 
 from src.pipeline_factory import PipelineFactory
-################
-# Configurations#
-################
 
-INPUT_FOLDER = "./inputs"
-OUTPUT_FOLDER = "./outputs"
-LOGGING_INFO = "INFO"
-PIPELINE_CHOICE = "pyspark"
+######################
+# Load configurations#
+######################
+FILE_PATH = "./config.yaml"
+
+try:
+    with open(FILE_PATH, "r") as f:
+        CONFIG = yaml.safe_load(f)
+except:
+    raise FileNotFoundError(f"Configuration file {FILE_PATH} not found")
 
 
 
+def run_pipeline(
+    logging_info: str, 
+    inputs_folder:str, 
+    outputs_folder:str, 
+    pipeline_choice: str):
 
-def run_pipeline():
     logger = logging.getLogger('automated_pipeline')
-    logger.setLevel(LOGGING_INFO)
+    logger.setLevel(logging_info)
 
-    # Looping through year folder
-    pathlist = Path(INPUT_FOLDER).glob("*/*")
-    for path in pathlist:
-        if path.is_dir():
-            path_in_str = str(path)
-            pipeline = PipelineFactory(PIPELINE_CHOICE,path_in_str,OUTPUT_FOLDER)
+    # Looping through inputs folder containing folder structure
+    # inputs
+    #  |- year
+    #      |- month
+    pathlist = Path(inputs_folder).glob("*/*")
+    for path_to_month_folder in pathlist:
+        if path_to_month_folder.is_dir():
+            pipeline = PipelineFactory(pipeline_choice,path_to_month_folder,outputs_folder)
             pipeline.generate()
 
 
 if __name__ == "__main__":
-    run_pipeline()
+    run_pipeline(
+        logging_info = CONFIG.get("LOGGING_INFO"),
+        inputs_folder = CONFIG.get("INPUTS_FOLDER"),
+        outputs_folder = CONFIG.get("OUTPUTS_FOLDER"),
+        pipeline_choice= CONFIG.get("PIPELINE_CHOICE")
+    )
+
 
 

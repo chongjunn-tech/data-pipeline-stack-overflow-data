@@ -1,0 +1,4 @@
+LOGGING_INFO: "INFO"
+INPUTS_FOLDER: "./inputs"
+OUTPUTS_FOLDER: "./outputs"
+PIPELINE_CHOICE: "pyspark"
