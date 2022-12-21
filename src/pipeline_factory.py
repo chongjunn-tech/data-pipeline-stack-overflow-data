@@ -24,7 +24,7 @@ def PipelineFactory(pipeline_choice: str, input_folder: str , output_folder:str)
         "pyspark": PysparkPipeline,
         # "pandas_on_spark": PandasOnSparkPipeline, WIP as does not seems to have method to calculate most frequent element
     }
-    if pipeline_choice not in pipeline_choice.keys():
+    if pipeline_choice not in pipelines_available.keys():
         raise KeyError(f"pipeline choice not in {list(pipelines_available.keys())}")
     return pipelines_available.get(pipeline_choice)(
         input_folder = input_folder,
