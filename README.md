@@ -60,3 +60,8 @@ output summary table (JSON file) and a tag analysis table  will be generated in 
     │       │   ├── {{pipeline_name}}_tag_analysis.parquet       
     │       │   └── {{pipeline_name}}_summary_table.json                
     └── ...
+
+## Roadmap
+
+[] Integration with [Airflow](https://airflow.apache.org/)
+- Airflow can manage the scheduling of workflows to allow for more automation
