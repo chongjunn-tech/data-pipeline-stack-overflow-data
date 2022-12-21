@@ -7,7 +7,7 @@ users) to generate a summary table (JSON file) and a tag analysis table (parquet
 ## Installation
 - dependencies of pyspark: To run pyspark based data pipeline (one of choice in `PipelineFactory`), you will need to install Java SE Development Kit. Please refer to JDK downloads [here](https://www.oracle.com/sg/java/technologies/downloads/)
 
-- dependencies of app
+- dependencies of data pipeline
 ```
 conda create -n data-pipeline python=3.8 -y
 conda activate data-pipeline
@@ -16,22 +16,22 @@ pip install -r requirements.txt
 ```
 ## Configurations
 configurations can be changed at config.yaml
+
 ```
 INPUTS_FOLDER: "./inputs" # folder where you place the data
 OUTPUTS_FOLDER: "./outputs" # free-text
 PIPELINE_CHOICE: "pyspark" #Available choices for pipeline includes: "pandas", "pyspark"
 ```
 
-    
 ## Usage/ Examples
 
-Place input data in inputs folder 
+Place input data in inputs folder in the following nested folder structure
 
     .
     ├── ...
     ├── inputs                    
-    │   └──  2016
-    │       ├── 01       
+    │   └──  2016 (year)
+    │       ├── 01 (month)      
     │       ├── 02        
     │       └── 03                
     └── ...
@@ -64,4 +64,6 @@ output summary table (JSON file) and a tag analysis table  will be generated in 
 ## Roadmap
 
 [] Integration with [Airflow](https://airflow.apache.org/)
-- Airflow can manage the scheduling of workflows to allow for more automation
+- Airflow can allow data engineer to programmatically orchestrate and schedule data pipelines
+[] Integration with Cloud
+- Upload data to the cloud storage
