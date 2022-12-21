@@ -46,9 +46,8 @@ spark = SparkSession.builder.appName("StackOverflow Analysis").getOrCreate()
 # Classes#
 ##########
 class PysparkPipeline(BasePipeline):
-    def __init__(self, input_folder: str, output_folder: str) -> None:
-        super().__init__(input_folder, output_folder)
-    
+    def __init__(self, path_to_month_folder: str , outputs_folder: str) -> None:
+        super().__init__(path_to_month_folder, outputs_folder)
 
     def _preprocess_data(self, df_posts, df_users):
 
@@ -152,7 +151,6 @@ class PysparkPipeline(BasePipeline):
         
         # drop additional column
         tag_analysis = tag_analysis.drop(*indexes)
-        tag_analysis.show()
 
         return tag_analysis
 
@@ -165,10 +163,14 @@ class PysparkPipeline(BasePipeline):
         ### Summary table
         summary_table = self.compute_summary(df_posts, df_users)
         self.dict_to_json_file(summary_table, self.summary_table_filename)
-        logging.info(
-            f"Summary table (JSON file) for {self.input_folder} created : {self.summary_table_filename}"
+        print(
+            f"Summary table (JSON file)- {self.summary_table_filename} created"
         )
 
         ### tag analysis table
         tag_analysis_table = self.compute_tag_analysis(df_posts, df_users)
         tag_analysis_table.write.mode("overwrite").parquet(self.tag_analysis_filename)
+
+        print(
+            f"Tag analysis table (Parquet file) - {self.tag_analysis_filename} created"
+        )

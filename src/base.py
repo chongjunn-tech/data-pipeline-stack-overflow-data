@@ -20,34 +20,34 @@ class BasePipeline(ABC):
     BasePipeline Class that should be inherited by all implemented pipeline (implemented with different python libraries)
     It contains attributes and methods that are shared among all pipeline and define abstract methods
 
-    Attributes:
-        input_folder (str): folder name for input_folder
-        posts_filename (str): relative path to posts.csv
-        users_filename (str): relative path to users.csv
-        summary_table_filename (str): relative path to "summary_table.json"
-        tag_analysis_filename (str):relative path to "tag_analysis.parquet"
-
-
     Args:
-        input_folder (str): folder name for input_folder
-        output_folder (str): folder name for output_folder
-    
+        path_to_month_folder (str): path to month folder containing the following csv files- posts.csv and users.csv
+        outputs_folder (str): folder name for output_folder
+
+    Attributes:
+        posts_filename (str): relative path to posts.csv based on what was passed in args (path_to_month_folder)
+        users_filename (str): relative path to users.csv based on what was passed in args (path_to_month_folder)
+        data_year (str): year information of data. It will be useful for preprocessing users.csv for January 2016 as it contains all users created until that point
+        data_month (str): month information of data. It will be useful for preprocessing users.csv for January 2016 as it contains all users created until that point
+        summary_table_filename (str): relative path to "summary_table.json" based on what was passed in args (output_folder)
+        tag_analysis_filename (str):relative path to "tag_analysis.parquet" based on what was passed in args (output_folder)
     
     """    
-    def __init__(self, input_folder: str, output_folder: str) -> None:
-        self.input_folder = input_folder
-        self.posts_filename = str(Path(input_folder)/"posts.csv")
-        self.users_filename = str(Path(input_folder)/"users.csv")
-        self.data_year, self.data_month = self._get_year_and_month_from_input_folder(input_folder)
+    def __init__(self,  path_to_month_folder: str , outputs_folder: str) -> None:
+        self.posts_filename = str(Path(path_to_month_folder)/"posts.csv")
+        self.users_filename = str(Path(path_to_month_folder)/"users.csv")
+        self.data_year, self.data_month = self._get_year_and_month_from_pathname(path_to_month_folder)
 
         (self.summary_table_filename, 
-        self.tag_analysis_filename) = self._create_output_folder_structure(self.data_year, self.data_month, output_folder)
+        self.tag_analysis_filename) = self._create_output_folder_structure(self.data_year, self.data_month, outputs_folder)
 
     
-    def _get_year_and_month_from_input_folder(
+    def _get_year_and_month_from_pathname(
         self,
-        input_folder: str):
-        year , month = Path(input_folder).parts[-2:]
+        pathname: str)-> Tuple [str,str]:
+        """ Get year and month information from the pathname using Pathlib
+        """
+        year , month = Path(pathname).parts[-2:]
         return year, month
 
     def _create_output_folder_structure(
@@ -55,7 +55,7 @@ class BasePipeline(ABC):
         year: str,
         month: str ,
         output_folder: str
-        )-> Tuple [ str, str]:        
+        )-> Tuple [str, str]:        
         """
         Helper function to create summary_table_filename and tag_analysis_filename
 
@@ -126,6 +126,9 @@ class BasePipeline(ABC):
     def generate(self):
         """
         Generates summary table (json file) and tag analysis table (parquet file partitioned by year and month)
+        in outputs folder as the following format
+         - summary table (JSON format): {{output_folder}}/{{year}}/{{month}}/{{pipeline_name}}_summary_table.json
+         - tag analysis table (parquet format): {{output_folder}}/{{year}}/{{month}}/{{pipeline_name}}_tag_analysis.parquet
 
         Summary table, a JSON file with the following info:
             -  Number of posts in that month
@@ -144,6 +147,6 @@ class BasePipeline(ABC):
             - avg_score: Average score of the posts that contain this tag
             - tag_hero: `display_name` of the user who created most posts with this tag in the current month
             - month
-            -  year
+            - year
         """        
         pass

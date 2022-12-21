@@ -18,8 +18,8 @@ from src.base import BasePipeline
 # Classes#
 ##########
 class PandasPipeline(BasePipeline):
-    def __init__(self, input_folder: str, output_folder: str) -> None:
-        super().__init__(input_folder, output_folder)
+    def __init__(self, path_to_month_folder: str , outputs_folder: str) -> None:
+        super().__init__(path_to_month_folder, outputs_folder)
 
     def _get_tag_hero(self, series: pd.Series):
         """Helper function for lambda function
@@ -199,8 +199,8 @@ class PandasPipeline(BasePipeline):
         ### Summary table
         summary_table = self.compute_summary(df_posts, df_users)
         self.dict_to_json_file(summary_table, self.summary_table_filename)
-        logging.info(
-            f"Summary table (JSON file) for {self.input_folder} created : {self.summary_table_filename}"
+        print(
+            f"Summary table (JSON file)- {self.summary_table_filename} created : "
         )
 
         ### tag analysis table
@@ -208,6 +208,6 @@ class PandasPipeline(BasePipeline):
         tag_analysis_table.to_parquet(
             self.tag_analysis_filename, partition_cols=["year", "month"]
         )
-        logging.info(
-            f"Tag analysis table (Parquet file) for {self.input_folder} created : {self.tag_analysis_filename}"
+        print(
+            f"Tag analysis table (Parquet file) - {self.tag_analysis_filename} created"
         )
