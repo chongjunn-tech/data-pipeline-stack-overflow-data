@@ -15,11 +15,17 @@ pip install -r requirements.txt
 
 ```
 ## Configurations
-- configurations can be changed at config.env
+configurations can be changed at config.yaml
+```
+INPUTS_FOLDER: "./inputs" # folder where you place the data
+OUTPUTS_FOLDER: "./outputs" # free-text
+PIPELINE_CHOICE: "pyspark" #Available choices for pipeline includes: "pandas", "pyspark"
+```
+
     
 ## Usage/ Examples
 
-Place input data in inputs folder
+Place input data in inputs folder 
 
     .
     ├── ...
@@ -37,20 +43,20 @@ Place input data in inputs folder
 python main.py
 ```
 
-output summary table (JSON file) and a tag analysis table  will be generated in desired folder name
+output summary table (JSON file) and a tag analysis table  will be generated in desired folder name (default: "./outputs" )
 
 
     .
     ├── ...
-    ├── <chosen_folder_name>                    
+    ├── outputs                   
     │   └──  2016
     │       ├── 01
-    │       │   ├── tag_analysis.parquet       
-    │       │   └── summary_table.json
+    │       │   ├── {{pipeline_name}}_tag_analysis.parquet       
+    │       │   └── {{pipeline_name}}_summary_table.json
     │       ├── 02
-    │       │   ├── tag_analysis.parquet       
-    │       │   └── summary_table.json        
+    │       │   ├── {{pipeline_name}}_tag_analysis.parquet       
+    │       │   └── {{pipeline_name}}_summary_table.json        
     │       └── 03
-    │       │   ├── tag_analysis.parquet       
-    │       │   └── summary_table.json                
+    │       │   ├── {{pipeline_name}}_tag_analysis.parquet       
+    │       │   └── {{pipeline_name}}_summary_table.json                
     └── ...

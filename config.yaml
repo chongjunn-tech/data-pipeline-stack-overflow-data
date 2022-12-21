@@ -1,4 +1,3 @@
-LOGGING_INFO: "INFO"
-INPUTS_FOLDER: "./inputs"
-OUTPUTS_FOLDER: "./outputs"
-PIPELINE_CHOICE: "pyspark"
+INPUTS_FOLDER: "./inputs" # folder where you place the data
+OUTPUTS_FOLDER: "./outputs" # free-text
+PIPELINE_CHOICE: "pyspark" #Available choices for pipeline includes: "pandas", "pyspark"
