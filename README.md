@@ -34,7 +34,7 @@ Place input data in inputs folder
 
 
 ```
-./run.sh
+python main.py
 ```
 
 output summary table (JSON file) and a tag analysis table  will be generated in desired folder name
