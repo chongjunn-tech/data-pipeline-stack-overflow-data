@@ -200,7 +200,7 @@ class PandasPipeline(BasePipeline):
         summary_table = self.compute_summary(df_posts, df_users)
         self.dict_to_json_file(summary_table, self.summary_table_filename)
         print(
-            f"Summary table (JSON file)- {self.summary_table_filename} created : "
+            f"Summary table (JSON file) - {self.summary_table_filename} created"
         )
 
         ### tag analysis table
