@@ -40,9 +40,12 @@ def run_pipeline(
     #  |   |- month
     #  |       |- posts.csv
     #  |       |- users.csv
-    pathlist = Path(inputs_folder).glob("*/*")
-    for path_to_month_folder in pathlist:
-        if path_to_month_folder.is_dir():
+    generator = Path(inputs_folder).glob("*/*")
+    pathlist = [path for path in generator if path.is_dir()]
+    if not pathlist:
+        raise FileNotFoundError(f"No data found in {inputs_folder}")
+    else:
+        for path_to_month_folder in pathlist:
             pipeline = PipelineFactory(pipeline_choice,path_to_month_folder,outputs_folder)
             pipeline.generate()
 
